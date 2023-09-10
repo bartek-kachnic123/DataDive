@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if title %} {{ title }} {% else %} Main Page {% endif %}</title>
+  </head>
+  <body>
+   <div class="cointainer">
+    <img
+      src="{% static 'images/banana.jpeg' %}"
+      alt="Picture of banana"
+      srcset=""
+    />
+    </div>
+    {% if categories_list %}
+    <div class="cointainer" style="min-width: 800; max-height: 600;">
+      <ul>
+        {% for category in categories_list %} 
+        <li><a href="category/{{ category.slug }}">{{ category.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% else %}
+    <h2>Brak kategorii</h2>
+    {% endif %}
+  </body>
+</html>

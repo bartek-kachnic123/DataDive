@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if category %} {{ category.name }} {% else %} Category Page {% endif %}</title>
+
+</head>
+<body>
+    <div class="cointainer" style="min-width: 800; max-height: 600;">
+        {% if category %}
+        <h2>{{ category.name }}</h2>
+        <ul>
+        {% for page in pages %} 
+        <li><a href="{{ page.url }}">{{ page.title }} </a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% else %}
+    <h2>Brak kategorii</h2>
+    {% endif %}
+    
+</body>
+</html>
