@@ -1,3 +1,67 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
+from data_dive import models, forms
 # Create your views here.
+
+
+def index(request):
+    context_dict = {
+        'title': 'Main page context'
+    }
+    # Get top 5 categories by number of likes"
+    categories_list = models.Category.objects.order_by('-likes')[:5]
+    context_dict['categories_list'] = categories_list
+
+    return render(request, 'data_dive/index.html', context=context_dict)
+
+
+def show_category(request, category_name_slug):
+    context_dict = {}
+
+    try:
+        category = models.Category.objects.get(slug=category_name_slug)
+        pages = models.Page.objects.filter(category=category)
+
+        context_dict['category'] = category
+        context_dict['pages'] = pages
+    except models.Category.DoesNotExist:
+        context_dict['category'] = None
+        context_dict['pages'] = None
+
+    return render(request, 'data_dive/category.html', context=context_dict)
+
+
+def add_category(request):
+    context_dict = {}
+    form = forms.CategoryForm()
+
+    if request.method == 'POST':
+        form = forms.CategoryForm(request.POST)
+
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('/dive/')
+        else:
+            print(form.errors)
+
+    context_dict['form'] = form
+
+    return render(request, 'data_dive/add_category.html', context=context_dict)
+
+
+def add_page(request):
+    context_dict = {}
+    form = forms.PageForm()
+
+    if request.method == 'POST':
+        form = forms.PageForm(request.POST)
+
+        if form.is_valid():
+            form.save(commit=True)
+            category_slug = form.cleaned_data['category'].slug
+            return redirect(f'/dive/category/{category_slug}/')
+        else:
+            print(form.errors)
+    context_dict['form'] = form
+
+    return render(request, 'data_dive/add_page.html', context=context_dict)
