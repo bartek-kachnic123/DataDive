@@ -3,4 +3,11 @@
 *.pot
 *.pyc
 __pycache__
+
+
+# Database data
+data_dive/migrations
 db.sqlite3
+
+# Static Data
+static
