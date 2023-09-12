@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
 from data_dive import models, forms
 # Create your views here.
@@ -24,6 +25,7 @@ def show_category(request, category_name_slug):
 
         context_dict['category'] = category
         context_dict['pages'] = pages
+        context_dict['title'] = category.name
     except models.Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
@@ -32,7 +34,7 @@ def show_category(request, category_name_slug):
 
 
 def add_category(request):
-    context_dict = {}
+    context_dict = {'title' : 'Add a Category'}
     form = forms.CategoryForm()
 
     if request.method == 'POST':
@@ -50,7 +52,7 @@ def add_category(request):
 
 
 def add_page(request):
-    context_dict = {}
+    context_dict = {'title' : 'Add a Page'}
     form = forms.PageForm()
 
     if request.method == 'POST':
@@ -59,7 +61,8 @@ def add_page(request):
         if form.is_valid():
             form.save(commit=True)
             category_slug = form.cleaned_data['category'].slug
-            return redirect(f'/dive/category/{category_slug}/')
+            return redirect(reverse('data_dive:show_category', kwargs={'category_name_slug': category_slug}))
+
         else:
             print(form.errors)
     context_dict['form'] = form
