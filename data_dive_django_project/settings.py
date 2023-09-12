@@ -104,6 +104,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+    {
+        'NAME': 'data_dive_django_project.validators.MinimumNumbersCharsValidator',
+        'OPTIONS' : {'min_chars' : 2,}
+    },
+    {
+        'NAME': 'data_dive_django_project.validators.MinimumSpecialCharsValidator',
+        'OPTIONS' : {'min_chars' : 2,}
+    },
 ]
 
 # Password Hashers
