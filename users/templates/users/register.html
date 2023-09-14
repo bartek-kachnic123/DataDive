@@ -1,0 +1,16 @@
+{% extends 'users/components/base.html' %}
+
+
+{% block body_block %}
+<div>
+    <form id="user_form" method="post" action="{% url 'users:register' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ register_user_form.as_p }}
+        {{ profile_form.as_p }}
+        <input type="submit" name="submit" value="Register">
+    </form>
+</div>
+{% if registered %}
+<h2>Success</h2>
+{% endif %}
+{% endblock %}

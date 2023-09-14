@@ -23,5 +23,6 @@ from data_dive import views
 urlpatterns = [
     path('', views.index, name = 'index'),
     path('dive/', include('data_dive.urls')),
+    path('users/', include('users.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

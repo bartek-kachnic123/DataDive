@@ -33,4 +33,4 @@ def register(request):
         'is_registered': is_registered
     }
 
-    return render(request, 'users/templates/register.html', context=context_dict)
+    return render(request, 'users/register.html', context=context_dict)
