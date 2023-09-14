@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from users.models import UserProfile
 
-class RegisterUserForm(forms.UserCreationForm):
+class RegisterUserForm(UserCreationForm):
     email = forms.EmailField(max_length=128, required=True)
 
     class Meta:
