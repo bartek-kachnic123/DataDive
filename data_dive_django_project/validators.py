@@ -31,7 +31,8 @@ class MinimumCharsValidator(ABC):
     @abstractmethod
     def get_pattern(self):
         pass
-
+    
+    @property
     @abstractmethod
     def get_help_text(self):
         pass
@@ -43,8 +44,8 @@ class MinimumNumbersCharsValidator(MinimumCharsValidator):
         return '[0-9]'
 
     def get_help_text(self):
-        gettext(
-            f'This password must contain at least {self.min_chars} numbers!'),
+        return gettext(
+            f'This password must contain at least {self.min_chars} numbers.')
 
 
 class MinimumSpecialCharsValidator(MinimumCharsValidator):
@@ -53,5 +54,5 @@ class MinimumSpecialCharsValidator(MinimumCharsValidator):
         return '?=.*\W'
 
     def get_help_text(self):
-        gettext(
-            f'This password must contain at least {self.min_chars} special characters!')
+        return gettext(
+            f'This password must contain at least {self.min_chars} special characters.')
