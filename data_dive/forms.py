@@ -1,7 +1,9 @@
 from typing import Any, Dict
 from django import forms
 
-from data_dive import models
+from data_dive.models import ( 
+    Category, Page
+)
 
 import re
 
@@ -13,26 +15,26 @@ class CategoryForm(forms.ModelForm):
     slug = forms.SlugField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
-        model = models.Category
+        model = Category
         fields = ('name',)
 
 
 class PageForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=None, initial=models.Category.objects.first())
+    category = forms.ModelChoiceField(queryset=None, initial=Category.objects.first())
     title = forms.CharField(max_length=128, help_text="Enter a title for page", required=True)
     url = forms.URLField(
         max_length=1024, help_text="Enter a url field to page", required=True)
     views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
     class Meta:
-        model = models.Page
+        model = Page
 
         fields = ('category', 'title', 'url')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['category'].queryset = models.Category.objects.all()
+        self.fields['category'].queryset = Category.objects.all()
 
     def clean(self) -> Dict[str, Any]:
         cleaned_data = self.cleaned_data

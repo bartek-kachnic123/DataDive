@@ -1,7 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from data_dive import models, forms
+from data_dive.models import ( 
+    Category, Page
+)
+from data_dive.forms import (
+    CategoryForm, PageForm
+)
 # Create your views here.
 
 
@@ -10,7 +15,7 @@ def index(request):
         'title': 'Main page context'
     }
     # Get top 5 categories by number of likes"
-    categories_list = models.Category.objects.order_by('-likes')[:5]
+    categories_list = Category.objects.order_by('-likes')[:5]
     context_dict['categories_list'] = categories_list
 
     return render(request, 'data_dive/index.html', context=context_dict)
@@ -20,13 +25,13 @@ def show_category(request, category_name_slug):
     context_dict = {}
 
     try:
-        category = models.Category.objects.get(slug=category_name_slug)
-        pages = models.Page.objects.filter(category=category)
+        category = Category.objects.get(slug=category_name_slug)
+        pages = Page.objects.filter(category=category)
 
         context_dict['category'] = category
         context_dict['pages'] = pages
         context_dict['title'] = category.name
-    except models.Category.DoesNotExist:
+    except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
 
@@ -35,10 +40,10 @@ def show_category(request, category_name_slug):
 
 def add_category(request):
     context_dict = {'title' : 'Add a Category'}
-    form = forms.CategoryForm()
+    form = CategoryForm()
 
     if request.method == 'POST':
-        form = forms.CategoryForm(request.POST)
+        form = CategoryForm(request.POST)
 
         if form.is_valid():
             form.save(commit=True)
@@ -53,10 +58,10 @@ def add_category(request):
 
 def add_page(request):
     context_dict = {'title' : 'Add a Page'}
-    form = forms.PageForm()
+    form = PageForm()
 
     if request.method == 'POST':
-        form = forms.PageForm(request.POST)
+        form = PageForm(request.POST)
 
         if form.is_valid():
             form.save(commit=True)
