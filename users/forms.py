@@ -32,3 +32,7 @@ class UserProfileForm(forms.ModelForm):
             profile.save()
         return profile
 
+class LoginUserForm(forms.Form):
+    username_or_email = forms.CharField(max_length=150, help_text="Username or Email")
+    password = forms.CharField(max_length=2048, widget=forms.PasswordInput())
+    
