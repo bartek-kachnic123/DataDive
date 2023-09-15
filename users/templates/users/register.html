@@ -2,13 +2,20 @@
 
 
 {% block body_block %}
-<div>
-    <form id="user_form" method="post" action="{% url 'users:register' %}" enctype="multipart/form-data">
+{% load crispy_forms_tags %}
+<div class="row">
+    <hr>
+    <div class="col-md-3"></div>
+    <div class="col-auto  mx-3"><form id="user_form" class='form-control' method="post" action="{% url 'users:register' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ register_user_form.as_p }}
-        {{ profile_form.as_p }}
-        <input type="submit" name="submit" value="Register">
+        {{ register_user_form| crispy }}
+        {{ profile_form | crispy }}
+        <div class="row text-center">
+        <button class="submit btn btn-outline-dark btn-lg mx-auto" type="submit" name="submit">R E G I S T E R</button>
+        </div>
     </form>
+    </div>
+    <div class="col-md-3"></div>
 </div>
 {% if registered %}
 <h2>Success</h2>
