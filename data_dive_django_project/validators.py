@@ -51,7 +51,7 @@ class MinimumNumbersCharsValidator(MinimumCharsValidator):
 class MinimumSpecialCharsValidator(MinimumCharsValidator):
 
     def get_pattern(self):
-        return '?=.*\W'
+        return '\W'
 
     def get_help_text(self):
         return gettext(
