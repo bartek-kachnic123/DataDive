@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
+from django.contrib.auth.decorators import login_required
 from data_dive.models import ( 
     Category, Page
 )
@@ -37,7 +37,7 @@ def show_category(request, category_name_slug):
 
     return render(request, 'data_dive/category.html', context=context_dict)
 
-
+@login_required
 def add_category(request):
     context_dict = {'title' : 'Add a Category'}
     form = CategoryForm()
@@ -55,7 +55,7 @@ def add_category(request):
 
     return render(request, 'data_dive/add_category.html', context=context_dict)
 
-
+@login_required
 def add_page(request):
     context_dict = {'title' : 'Add a Page'}
     form = PageForm()
