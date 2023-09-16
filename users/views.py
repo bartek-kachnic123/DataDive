@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib.auth import login
+from django.contrib.auth import (
+    login,
+    logout
+)
+from django.contrib.auth.decorators import login_required
 from users.forms import (
     RegisterUserForm,
     UserProfileForm,
@@ -59,3 +63,9 @@ def user_login(request):
         'login_user_form' : login_user_form
     }
     return render(request, 'users/login.html', context=context_dict)
+
+@login_required
+def user_logout(request):
+    logout(request)
+
+    return redirect(reverse('data_dive:index'))
