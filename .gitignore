@@ -6,8 +6,6 @@ __pycache__
 
 
 # Database data
-data_dive/migrations
-users/migrations
 db.sqlite3
 
 # Images Data
