@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.http import HttpRequest
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 from data_dive.models import ( 
     Category, Page
 )
@@ -73,3 +75,19 @@ def add_page(request):
     context_dict['form'] = form
 
     return render(request, 'data_dive/add_page.html', context=context_dict)
+
+
+def goto_url(request : HttpRequest):
+    if request.method == 'GET':
+        page_id = request.GET.get('page_id')
+
+        try:
+            selected_page = Page.objects.get(id=page_id)
+        except Page.DoesNotExist:
+            # add message here
+            return redirect(reverse('data_dive:index'))
+        
+        selected_page.views = F('views') + 1
+        selected_page.save()
+
+        return redirect(selected_page.url)
