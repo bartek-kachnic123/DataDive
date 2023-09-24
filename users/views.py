@@ -27,10 +27,13 @@ def register(request):
         profile_form = UserProfileForm(request.POST)
 
         if register_user_form.is_valid() and profile_form.is_valid():
-            user = register_user_form.save()
+            user: User = register_user_form.save()
 
             profile_form.save(user, request.FILES)
             is_registered = True
+            if user:
+                login(request, user)
+            return redirect(reverse('data_dive:index'))
         else:
             print(register_user_form.errors, profile_form.errors)
     else:
@@ -102,10 +105,11 @@ class UpdateProfileView(View):
         else:
             return render(request, 'users/profile.html', context=context_dict)
 
-    def get_userprofile_and_context(self, _user : User, profile_form : UserProfileForm):
+    def get_userprofile_and_context(self, _user: User, profile_form: UserProfileForm):
         user_profile = UserProfile.objects.get(user=_user)
         context_dict = {'profile_form': profile_form,
                         'profile_url': user_profile.picture.url}
         return (user_profile, context_dict)
+
 
 update_profile_view = UpdateProfileView.as_view()
