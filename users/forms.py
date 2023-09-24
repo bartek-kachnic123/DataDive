@@ -27,7 +27,7 @@ class UserProfileForm(forms.ModelForm):
         # Adding picture
         if files and 'picture' in files:
             profile.picture = files['picture']
-            profile.picture.name = profile.get_profile_filename()
+            profile.picture.name = profile.get_profile_filename(str(files['picture']))
 
         if commit:
             profile.save()
