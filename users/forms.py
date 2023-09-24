@@ -18,15 +18,16 @@ class UserProfileForm(forms.ModelForm):
         fields = ['website_url', 'picture']
 
     def save(self,user=None,files=None, commit=True):
-        profile = super(UserProfileForm, self).save(commit=False)
+        profile : UserProfile = super(UserProfileForm, self).save(commit=False)
 
-        # Adding user one to one relationship with userProfile
+        # Adding user one to one relationship with userProfile if user arent already
         if user:
             profile.user = user
 
         # Adding picture
         if files and 'picture' in files:
             profile.picture = files['picture']
+            profile.picture.name = profile.get_profile_filename()
 
         if commit:
             profile.save()
