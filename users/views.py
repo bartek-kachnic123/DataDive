@@ -5,6 +5,7 @@ from django.contrib.auth import (
     logout
 )
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import HttpRequest
@@ -81,21 +82,18 @@ def user_logout(request):
 class UpdateProfileView(View):
     @method_decorator(login_required)
     def get(self, request: HttpRequest):
-        user_profile = UserProfile.objects.get(user=request.user)
-        profile_form = UserProfileForm(
-            initial={'website_url': user_profile.website_url, 'picture': user_profile.picture,
-                     })
-        context_dict = {'profile_form': profile_form,
-                        'profile_url': user_profile.picture.url}
+        profile_form = UserProfileForm()
+        user_profile, context_dict = self.get_userprofile_and_context(
+            request.user, profile_form)
+        profile_form.initial = {'website_url': user_profile.website_url, 'picture': user_profile.picture,
+                                }
         return render(request, 'users/profile.html', context=context_dict)
 
     @method_decorator(login_required)
     def post(self, request: HttpRequest):
         profile_form = UserProfileForm(request.POST, request.FILES)
-        user_profile = UserProfile.objects.get(user=request.user)
-
-        context_dict = {'profile_form': profile_form,
-                        'profile_url': user_profile.picture.url}
+        user_profile, context_dict = self.get_userprofile_and_context(
+            request.user, profile_form)
         if profile_form.is_valid():
             user_profile.update(cleaned_data=profile_form.cleaned_data,
                                 files=request.FILES)
@@ -104,5 +102,10 @@ class UpdateProfileView(View):
         else:
             return render(request, 'users/profile.html', context=context_dict)
 
+    def get_userprofile_and_context(self, _user : User, profile_form : UserProfileForm):
+        user_profile = UserProfile.objects.get(user=_user)
+        context_dict = {'profile_form': profile_form,
+                        'profile_url': user_profile.picture.url}
+        return (user_profile, context_dict)
 
 update_profile_view = UpdateProfileView.as_view()
