@@ -107,8 +107,13 @@ class UpdateProfileView(View):
 
     def get_userprofile_and_context(self, _user: User, profile_form: UserProfileForm):
         user_profile = UserProfile.objects.get(user=_user)
+
+        profile_url = None
+        if user_profile.picture:
+            profile_url = user_profile.picture.url
+
         context_dict = {'profile_form': profile_form,
-                        'profile_url': user_profile.picture.url}
+                        'profile_url': profile_url}
         return (user_profile, context_dict)
 
 
