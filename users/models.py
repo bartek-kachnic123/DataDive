@@ -19,6 +19,7 @@ class UserProfile(models.Model):
             self.website_url = cleaned_data['website_url']
 
         if files and 'picture' in files:
+            self.picture.delete(save=False) # Delete previous profile
             self.picture = files['picture']
             self.picture.name = self.get_profile_filename(str(files['picture']))
 
