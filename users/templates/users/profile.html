@@ -1,4 +1,5 @@
 {% extends 'users/components/base.html' %} {% block body_block %} 
+{% load static %}
 {% load crispy_forms_tags %}
 <div class="row py-3">
   <hr />
@@ -27,11 +28,19 @@
   <div class="col-md-2">
     <div class="row"></div>
     <div class="row">
+      {% if profile_url %}
       <img
         src="{{ profile_url }}"
         class="rounded float-start bg-red"
+        alt="profile_image2"
+      />
+      {% else %}
+      <img
+        src="{% static 'images/profile_default.png' %}"
+        class="rounded float-start bg-red"
         alt="profile_image"
       />
+      {% endif %}
     </div>
     <div class="row py-3"><h3>Your profile picture</h3></div>
   </div>
