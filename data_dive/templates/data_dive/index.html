@@ -1,44 +1,78 @@
-{% extends 'data_dive/components/base.html' %}
-{% load static %}
-
+{% extends 'data_dive/components/base.html' %} {% load static %} 
 {% block body_block %}
-<div class="col-auto col-auto">
-<div class="cointainer-sm">
-  <img
-    src="{% static 'images/banana.jpeg' %}"
-    alt="Picture of banana"
-    srcset=""
-  />
-</div>
-<hr>
-<h2 class="text-center">Top 5 Categories</h2>
-<hr>
-{% if categories_list %}
-<div class="cointainer">
-  <div class="row row-cols-auto">
-    {% for category in categories_list %}
-    
-      <a href="{% url 'data_dive:show_category' category.slug %}"
-        
-      >
-      <div class="card border-success mb-3" style="max-width: 18rem;">
-        <div class="card-header bg-transparent border-success"><h5 class="card-title text-success">{{ category.name }}</h5></div>
-        <div class="card-body text-success text-center mx-auto">
-          
-          <button class="btn btn-primary btn-auto"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sticky" viewBox="0 0 16 16">
-            <path d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h6.086a1.5 1.5 0 0 0 1.06-.44l4.915-4.914A1.5 1.5 0 0 0 15 8.586V2.5A1.5 1.5 0 0 0 13.5 1h-11zM2 2.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 .5.5V8H9.5A1.5 1.5 0 0 0 8 9.5V14H2.5a.5.5 0 0 1-.5-.5v-11zm7 11.293V9.5a.5.5 0 0 1 .5-.5h4.293L9 13.793z"/>
-          </svg><p class="card-text">Pages</p></button>
+<div class="col">
+  <!-- <div class="cointainer-sm">
+    <img
+      src="{% static 'images/banana.jpeg' %}"
+      alt="Picture of banana"
+      srcset=""
+      width="400"
+    />
+  </div> -->
+  
+  <hr />
+  <h2 class="text-center">Top 5 Categories</h2>
+  <hr />
+  {% if categories_list %}
+  <div class="cointainer-sm">
+    <div class="row row-cols-3 align-items-start">
+      {% for category in categories_list %}
+      <div>
+      <a href="{% url 'data_dive:show_category' category.slug %}">
+        <div class="card border-success mb-3" style="max-width: 18rem">
+          <div class="card-header bg-transparent border-success">
+            <h5 class="card-title text-success">{{ category.name }}</h5>
+          </div>
+          <div class="card-body text-success text-center mx-auto">
+            <button class="btn btn-primary btn-auto mb-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-sticky"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h6.086a1.5 1.5 0 0 0 1.06-.44l4.915-4.914A1.5 1.5 0 0 0 15 8.586V2.5A1.5 1.5 0 0 0 13.5 1h-11zM2 2.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 .5.5V8H9.5A1.5 1.5 0 0 0 8 9.5V14H2.5a.5.5 0 0 1-.5-.5v-11zm7 11.293V9.5a.5.5 0 0 1 .5-.5h4.293L9 13.793z"
+                />
+              </svg>
+              <p class="card-text"><p>Pages
+              <strong id="like_count{{ category.id }}">{{ category.likes }}</strong> likes </p>
+              <hr>
+             </p>
+            </button>
+          </div>
+          <div class="card-footer bg-transparent border-success"></div>
         </div>
-        <div class="card-footer bg-transparent border-success"></div>
-      </div>
       </a>
-    
-    {% endfor %}
+      <p>
+        {% if user.is_authenticated %}
+        <div id="like_btn{{ category.id }}" class="text-center">
+        <button 
+        data-categoryid="{{ category.id }}"
+        class="btn btn-outline-primary  like_btn"
+        type="button">
+        <span data-feather="thumbs-up"></span>
+        Like Category
+        </button>
+        </div>
+        
+        {% endif %}</p>
+        </div>
+      
+      {% endfor %}
+    </div>
   </div>
-</div>
-{% else %}
-<h2>Brak kategorii</h2>
-{% endif %}
+  {% else %}
+  <h2>Brak kategorii</h2>
+  {% endif %}
 </div>
 
+
+{% endblock %}
+
+
+{% block script_block %}
+<script src="{% static 'js/like_category_ajax.js' %}"></script>
 {% endblock %}
