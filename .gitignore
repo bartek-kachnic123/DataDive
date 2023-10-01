@@ -75,3 +75,6 @@ db.sqlite3
 
 # todo list
 todo.md
+
+# vs code settings
+settings.json
