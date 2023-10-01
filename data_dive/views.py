@@ -1,14 +1,15 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.http import HttpRequest
+from django.contrib.auth import get_user
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
-from data_dive.models import ( 
-    Category, Page
-)
-from data_dive.forms import (
-    CategoryForm, PageForm
-)
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views import View
+
+from data_dive.forms import CategoryForm, PageForm
+from data_dive.models import Category, Page
+
 # Create your views here.
 
 
@@ -39,9 +40,10 @@ def show_category(request, category_name_slug):
 
     return render(request, 'data_dive/category.html', context=context_dict)
 
+
 @login_required
 def add_category(request):
-    context_dict = {'title' : 'Add a Category'}
+    context_dict = {'title': 'Add a Category'}
     form = CategoryForm()
 
     if request.method == 'POST':
@@ -57,9 +59,10 @@ def add_category(request):
 
     return render(request, 'data_dive/add_category.html', context=context_dict)
 
+
 @login_required
 def add_page(request):
-    context_dict = {'title' : 'Add a Page'}
+    context_dict = {'title': 'Add a Page'}
     form = PageForm()
 
     if request.method == 'POST':
@@ -68,7 +71,9 @@ def add_page(request):
         if form.is_valid():
             form.save(commit=True)
             category_slug = form.cleaned_data['category'].slug
-            return redirect(reverse('data_dive:show_category', kwargs={'category_name_slug': category_slug}))
+            return redirect(reverse('data_dive:show_category',
+                                    kwargs={'category_name_slug': category_slug
+                                            }))
 
         else:
             print(form.errors)
@@ -77,7 +82,7 @@ def add_page(request):
     return render(request, 'data_dive/add_page.html', context=context_dict)
 
 
-def goto_url(request : HttpRequest):
+def goto_url(request: HttpRequest):
     if request.method == 'GET':
         page_id = request.GET.get('page_id')
 
@@ -86,8 +91,42 @@ def goto_url(request : HttpRequest):
         except Page.DoesNotExist:
             # add message here
             return redirect(reverse('data_dive:index'))
-        
+
         selected_page.views = F('views') + 1
         selected_page.save()
 
         return redirect(selected_page.url)
+
+
+class LikeCategoryView(View):
+
+    @method_decorator(login_required)
+    def get(self, request: HttpRequest):
+        category_id = request.GET.get('category_id')
+
+        try:
+            category = Category.objects.get(id=int(category_id))
+        except Category.DoesNotExist or ValueError:
+            return HttpResponse(-1)
+        user = get_user(request)
+        is_liked = None
+        if category.is_liked_by(user):
+            category.likes = F('likes') - 1
+            category.unlike_category(user)
+            is_liked = True
+        else:
+            category.likes = F('likes') + 1
+            category.like_category(user)
+            is_liked = False
+
+        category.save()
+
+        category.refresh_from_db()
+        data_dict = {
+            'likes': category.likes,
+            'is_liked': is_liked
+        }
+        return JsonResponse(data=data_dict)
+
+
+like_category_view = LikeCategoryView.as_view()
