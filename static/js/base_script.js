@@ -1,0 +1,1 @@
+feather.replace(); // Using open source library https://feathericons.com/
