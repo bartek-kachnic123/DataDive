@@ -20,7 +20,7 @@ class CategoryForm(forms.ModelForm):
 
 
 class PageForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=None, initial=Category.objects.first())
+    category = forms.ModelChoiceField(queryset=None)
     title = forms.CharField(max_length=128, help_text="Enter a title for page", required=True)
     url = forms.URLField(
         max_length=1024, help_text="Enter a url field to page", required=True)

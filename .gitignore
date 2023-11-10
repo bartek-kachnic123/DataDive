@@ -4,6 +4,13 @@
 *.pyc
 __pycache__
 
+# virtual env
+.env
+venv
+env
+
+# workspace
+.idea
 
 # Database data
 db.sqlite3
