@@ -9,6 +9,8 @@ from django.views import View
 
 from data_dive.forms import CategoryForm, PageForm
 from data_dive.models import Category, Page
+from data_dive.utils import get_category_list
+from data_dive.serializers import  CategorySerializer
 
 # Create your views here.
 
@@ -130,3 +132,17 @@ class LikeCategoryView(View):
 
 
 like_category_view = LikeCategoryView.as_view()
+
+
+class SearchCategoryView(View):
+    def get(self, request: HttpRequest, *args, **kwargs): # noqa
+        query = request.GET.get('query', '') # noqa
+        result_list = get_category_list(max_results=5, contains=query)
+
+        data_dict = {
+            'result_list': CategorySerializer.serialize(query_set=result_list),
+        }
+        return JsonResponse(data=data_dict)
+
+
+search_category_view = SearchCategoryView.as_view()

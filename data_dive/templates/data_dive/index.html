@@ -1,14 +1,9 @@
 {% extends 'data_dive/components/base.html' %} {% load static %} 
 {% block body_block %}
 <div class="col">
-  <!-- <div class="cointainer-sm">
-    <img
-      src="{% static 'images/banana.jpeg' %}"
-      alt="Picture of banana"
-      srcset=""
-      width="400"
-    />
-  </div> -->
+<div class="pt-4 px-2">
+  {% include 'data_dive/components/search_category.html' %}
+</div>
   
   <hr />
   <h2 class="text-center">Top 5 Categories</h2>
@@ -75,4 +70,5 @@
 
 {% block script_block %}
 <script src="{% static 'js/like_category_ajax.js' %}"></script>
+    <script src="{% static 'js/search_category_ajax.js' %}"></script>
 {% endblock %}
