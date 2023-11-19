@@ -1,0 +1,35 @@
+{% extends 'page_categorizer/components/base.html' %}
+{% load static %}
+
+{% block body_block %}
+<div class="cointainer" style="min-width: 800; max-height: 600;">
+  {% if category %}
+  <h2>{{ category.name }}</h2>
+  <ul>
+    {% for page in pages %}
+    <li>
+      <figure>
+        <blockquote class="blockquote">
+          <p>
+            <a href="{% url 'page_categorizer:goto_url' %}?page_id={{ page.id }}">{{ page.title }} </a>
+          </p>
+    </li>
+
+    </blockquote>
+    <figcaption class="blockquote-footer">
+      {% if page.views > 1 %}
+      {{ page.views }} views
+      {% elif page.views == 1 %}
+      {{ page.views }} view
+      {% else %}
+      No views
+      {% endif %}
+    </figcaption>
+    </figure>
+    {% endfor %}
+  </ul>
+</div>
+{% else %}
+<h2>Brak kategorii</h2>
+{% endif %}
+{% endblock %}

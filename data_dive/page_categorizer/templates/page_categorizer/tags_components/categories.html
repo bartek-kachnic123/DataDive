@@ -1,0 +1,15 @@
+{% if categories_list %}
+<div class="cointainer">
+  <ul>
+    {% for category in categories_list %}
+    <li>
+      <a href="{% url 'page_categorizer:show_category' category.slug %}"
+        >{{ category.name }}</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% else %}
+<h2>Brak kategorii</h2>
+{% endif %}

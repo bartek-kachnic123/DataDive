@@ -1,10 +1,10 @@
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
-                      'data_dive_django_project.settings')
+                      'config.settings')
 import django
 django.setup()
 
-from data_dive import models
+from data_dive.page_categorizer import models
 
 
 def add_Page(category, title, url, views=0) -> models.Page:
