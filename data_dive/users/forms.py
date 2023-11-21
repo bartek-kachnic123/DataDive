@@ -1,7 +1,10 @@
 from django import forms
+from django.contrib.auth import forms as admin_forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django.utils.translation import gettext_lazy as _
 from .models import UserProfile
+
 
 
 class RegisterUserForm(UserCreationForm):
@@ -9,7 +12,7 @@ class RegisterUserForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['name', 'email', 'password1', 'password2']
 
 
 class UserProfileForm(forms.ModelForm):
@@ -36,6 +39,27 @@ class UserProfileForm(forms.ModelForm):
         return profile
 
 class LoginUserForm(forms.Form):
-    username_or_email = forms.CharField(max_length=150, help_text="Username or Email")
-    password = forms.CharField(max_length=2048, widget=forms.PasswordInput())
-    
+    email = forms.EmailField(max_length=254, help_text="Email")
+    password = forms.CharField(max_length=2048, widget=forms.PasswordInput(), help_text="Password")
+
+
+
+class UserAdminChangeForm(admin_forms.UserChangeForm):
+    class Meta(admin_forms.UserChangeForm.Meta):
+        model = get_user_model()
+        field_classes = {"email": forms.EmailField}
+
+
+class UserAdminCreationForm(admin_forms.UserCreationForm):
+    """
+    Form for User Creation in the Admin Area.
+    To change user signup, see UserSignupForm and UserSocialSignupForm.
+    """
+
+    class Meta(admin_forms.UserCreationForm.Meta):
+        model = get_user_model()
+        fields = ("email",)
+        field_classes = {"email": forms.EmailField}
+        error_messages = {
+            "email": {"unique": _("This email has already been taken.")},
+        }

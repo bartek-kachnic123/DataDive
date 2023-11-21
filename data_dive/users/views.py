@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import (
     login,
-    logout
+    logout,
+    authenticate,
 )
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
@@ -15,7 +17,6 @@ from .forms import (
     LoginUserForm
 )
 from .models import UserProfile
-from .utils import user_authenticate
 # Create your views here.
 
 
@@ -57,7 +58,10 @@ def user_login(request):
         login_user_form = LoginUserForm(request.POST)
 
         if login_user_form.is_valid():
-            user = user_authenticate(login_form=login_user_form)
+            email = login_user_form.cleaned_data.get('email')
+            password = login_user_form.cleaned_data.get('password')
+
+            user = authenticate(email=email, password=password)
 
             if user and user.is_active:
                 login(request, user)
@@ -66,7 +70,7 @@ def user_login(request):
                 login_user_form.add_error('password', 'Account is disabled!')
             else:
                 login_user_form.add_error(
-                    'password', 'Invalid username, email or password')
+                    'password', 'Invalid name, email or password')
 
     context_dict = {
         'title': 'Login',
