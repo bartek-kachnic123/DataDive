@@ -10,7 +10,7 @@
   <hr />
   {% if categories_list %}
   <div class="cointainer-sm">
-    <div class="row row-cols-3 align-items-start">
+    <div class="d-flex flex-wrap justify-content-evenly">
       {% for category in categories_list %}
       <div>
       <a href="{% url 'page_categorizer:show_category' category.slug %}">
